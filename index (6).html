@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margen Bruto · Terra Más</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#eee9df;--surface:#fff;--surface2:#f5f1ea;--border:#d9d3c6;
+  --primary:#1a3020;--primary-light:#274830;--primary-muted:#3d6148;
+  --accent:#c8a84b;--accent-light:#f5e9c0;
+  --text:#1a1a1a;--text-muted:#6b6560;
+  --positive:#1a6630;--negative:#b83030;--radius:8px;
+}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:13px}
+
+/* ── HEADER ── */
+.header{background:var(--primary);color:#fff;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.hbrand{display:flex;align-items:center;gap:14px}
+.hbrand h1{font-family:'Playfair Display',serif;font-size:19px;font-weight:700}
+.hbrand .sub{color:var(--accent);font-size:12px;font-family:'IBM Plex Mono',monospace}
+.hactions{display:flex;gap:8px}
+.btn-h{padding:6px 14px;border-radius:4px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);font-size:12px;cursor:pointer;transition:all .15s;font-family:'IBM Plex Sans',sans-serif}
+.btn-h:hover{background:rgba(255,255,255,.16);color:#fff}
+.btn-save{border-color:var(--accent);color:var(--accent)}.btn-save:hover{background:rgba(200,168,75,.15)}
+
+/* ── TABS ── */
+.tabs{background:var(--primary-light);display:flex;padding:0 20px;overflow-x:auto;position:sticky;top:54px;z-index:190;box-shadow:0 2px 4px rgba(0,0,0,.15)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:10px 22px;cursor:pointer;color:rgba(255,255,255,.5);font-size:13px;font-weight:500;border-bottom:3px solid transparent;transition:all .18s;white-space:nowrap;letter-spacing:.02em;user-select:none}
+.tab:hover{color:rgba(255,255,255,.85)}.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ── LAYOUTS ── */
+#content{min-height:calc(100vh - 98px)}
+.crop-layout{display:grid;grid-template-columns:1fr 360px;min-height:calc(100vh - 98px)}
+.ts-layout{display:grid;grid-template-columns:1fr 1fr 360px;min-height:calc(100vh - 98px)}
+
+/* ── LEFT ── */
+.left-panel{padding:20px 22px;overflow-y:auto}
+.left-panel.narrow{padding:16px 16px}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-header{background:var(--primary);color:#fff;padding:9px 16px;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.card-total{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--accent);font-weight:500}
+.card-body{padding:16px}.card-body.tight{padding:12px}
+
+/* ── PARAMS ── */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.pgrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pf label{display:block;font-size:10.5px;color:var(--text-muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.pf input{width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:13.5px;font-weight:500;color:var(--text);background:var(--surface2);transition:border-color .15s,background .15s}
+.pf input:focus{outline:none;border-color:var(--accent);background:#fff}
+
+/* ── FLETE ── */
+.flete-block{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-top:10px}
+.flete-title{font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--text-muted);margin-bottom:8px}
+.flete-row{display:grid;grid-template-columns:90px 1fr auto;gap:8px;align-items:center;margin-bottom:7px}
+.flete-row:last-child{margin-bottom:0}
+.fl-name{font-size:11.5px;color:var(--text);font-weight:500}
+.fl-result{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--primary-muted);white-space:nowrap}
+.flete-row input{padding:5px 7px;border:1px solid var(--border);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;background:#fff;color:var(--text);text-align:right;transition:border-color .15s;width:100%}
+.flete-row input:focus{outline:none;border-color:var(--accent)}
+
+/* ── TABLE ── */
+.tbl-head{display:grid;gap:6px;padding:0 0 6px;margin-bottom:6px;border-bottom:1px solid var(--border)}
+.tbl-head span{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);font-weight:600}
+.tbl-head.ins{grid-template-columns:1fr 76px 68px 62px 26px}
+.tbl-head.lab{grid-template-columns:1fr 52px 76px 62px 26px}
+.etapa-group{margin-bottom:14px}
+.etapa-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);padding:5px 0 6px;border-bottom:1px solid var(--accent-light);margin-bottom:7px}
+.ins-row{display:grid;grid-template-columns:1fr 76px 68px 62px 26px;gap:6px;align-items:center;margin-bottom:4px}
+.lab-row{display:grid;grid-template-columns:1fr 52px 76px 62px 26px;gap:6px;align-items:center;margin-bottom:4px}
+.ins-row input,.lab-row input{padding:5px 7px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:'IBM Plex Mono',monospace;background:var(--surface2);color:var(--text);transition:border-color .15s,background .15s;width:100%}
+.ins-row input[type=text],.lab-row input[type=text]{font-family:'IBM Plex Sans',sans-serif}
+.ins-row input:focus,.lab-row input:focus{outline:none;border-color:var(--accent);background:#fff}
+.tcell{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:var(--primary);text-align:right;padding-right:2px}
+.btn-del{width:24px;height:24px;border:none;background:none;cursor:pointer;color:#ccc;font-size:17px;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1}
+.btn-del:hover{color:var(--negative);background:#fef0f0}
+.btn-add{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border:1px dashed var(--border);border-radius:5px;background:none;cursor:pointer;font-size:12px;color:var(--text-muted);transition:all .15s;margin-top:5px;font-family:'IBM Plex Sans',sans-serif}
+.btn-add:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.btn-add.ne{border-color:var(--primary-muted);color:var(--primary-muted);margin-top:8px}
+.btn-add.ne:hover{background:rgba(26,48,32,.06)}
+.crop-div{background:var(--primary);color:#fff;padding:8px 16px;font-family:'Playfair Display',serif;font-style:italic;font-size:14px;display:flex;align-items:center;gap:8px;margin-bottom:14px;border-radius:var(--radius)}
+
+/* ── RIGHT PANEL ── */
+.right-panel{background:var(--primary);color:#fff;padding:20px 18px;position:sticky;top:98px;height:calc(100vh - 98px);overflow-y:auto}
+.right-panel::-webkit-scrollbar{width:4px}
+.right-panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.r-title{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,.45);margin-bottom:12px}
+
+/* ── RI HERO (protagonista) ── */
+.ri-hero{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:10px;
+  padding:16px;
+  margin-bottom:14px;
+  position:relative;
+  overflow:hidden;
+}
+.ri-hero::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),rgba(200,168,75,.3));
+}
+.ri-hero-t{
+  font-size:9.5px;text-transform:uppercase;letter-spacing:.14em;
+  color:rgba(255,255,255,.4);margin-bottom:12px;font-weight:600;
+}
+.ri-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.ri-block{
+  text-align:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:7px;padding:12px 8px;
+}
+.ri-block .rl{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:5px;display:block}
+.ri-block .rn{font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:600;color:#fff;line-height:1;display:block}
+.ri-block .ru{font-size:10px;color:rgba(255,255,255,.3);margin-top:3px;display:block}
+.ri-footer{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  padding-top:10px;border-top:1px solid rgba(255,255,255,.08);
+}
+.ri-footer-item{text-align:center}
+.ri-footer-item .rfl{font-size:9.5px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:3px}
+.ri-footer-item .rfv{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;display:block}
+
+/* ── IB ── */
+.r-ib{background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.2);border-radius:8px;padding:11px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.r-ib .il{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4)}
+.r-ib .iv{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;color:var(--accent)}
+.r-ib .is{font-size:10.5px;color:rgba(255,255,255,.3);margin-top:2px;font-family:'IBM Plex Mono',monospace}
+
+/* ── MB CARDS ── */
+.mb-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.mbc{border-radius:8px;padding:11px 12px;text-align:center;border:1px solid rgba(255,255,255,.08)}
+.mbc .ml{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);display:block;margin-bottom:5px}
+.mbc .mv{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;display:block}
+.mbc.pos-c{background:rgba(26,102,48,.28)}.mbc.neg-c{background:rgba(184,48,48,.28)}
+.mv.pos{color:#68e085}.mv.neg{color:#ff7c6c}
+
+/* ── BREAKDOWN ── */
+.bd{margin-bottom:12px}
+.bdt{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,.07)}
+.bdr{display:flex;justify-content:space-between;align-items:center;padding:3.5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.bdr:last-child{border-bottom:none}
+.bdr .bl{font-size:11.5px;color:rgba(255,255,255,.55)}.bdr .bv{font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(255,255,255,.75)}
+.bdr.sub .bl{font-size:10.5px;color:rgba(255,255,255,.27);padding-left:12px}.bdr.sub .bv{font-size:10.5px;color:rgba(255,255,255,.37)}
+.bdr.tot{padding-top:7px;margin-top:3px;border-top:1px solid rgba(255,255,255,.16)}
+.bdr.tot .bl{color:#fff;font-weight:600}.bdr.tot .bv{color:#fff;font-weight:600}
+
+/* ── COMBINED ── */
+.res-sep{border:none;border-top:1px solid rgba(255,255,255,.1);margin:12px 0}
+.r-sub{font-size:13px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.comb-box{background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.28);border-radius:8px;padding:12px 14px;margin-top:10px}
+.comb-box .ct{font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:9px}
+.comb-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.comb-row label{font-size:12px;color:rgba(255,255,255,.6)}
+.comb-v{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600}
+
+/* ── RESUMEN ── */
+.res-panel{padding:24px}
+.res-panel h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--primary);margin-bottom:20px}
+.res-tbl{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.res-tbl th{background:var(--primary);color:#fff;padding:11px 13px;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;text-align:right}
+.res-tbl th:first-child{text-align:left}
+.res-tbl td{padding:11px 13px;border-bottom:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:right}
+.res-tbl td:first-child{font-family:'IBM Plex Sans',sans-serif;font-weight:600;text-align:left}
+.res-tbl tr:last-child td{border-bottom:none}
+.res-tbl tr:hover td{background:var(--surface2)}
+.res-tbl tr.crow td{background:#f0ece0;font-weight:600}
+.pv{color:var(--positive);font-weight:600}.nv{color:var(--negative);font-weight:600}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--primary);color:#fff;padding:10px 18px;border-radius:6px;font-size:13px;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.3);transition:all .3s;border-left:3px solid var(--accent)}
+.toast.hide{transform:translateY(10px);opacity:0}
+
+@media(max-width:900px){.pgrid{grid-template-columns:repeat(2,1fr)}.crop-layout,.ts-layout{grid-template-columns:1fr}.right-panel{position:static;height:auto}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="hbrand">
+    <h1>🌾 Margen Bruto</h1>
+    <span class="sub">Terra Más · Campaña 26/27</span>
+  </div>
+  <div class="hactions">
+    <button class="btn-h btn-save" onclick="saveData()">💾 Guardar</button>
+    <button class="btn-h" onclick="resetCrop()">↺ Restablecer</button>
+    <button class="btn-h" onclick="sw('resumen')">📊 Resumen</button>
+  </div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div id="content"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATOS
+// Flete = km × tarifa($/km/tn) / TC × rendimiento = U$S/Ha
+// Corto: 20km × 605.20 = 12104 $/tn; Largo: 120km × 248.65 = 29838 $/tn ✓
+// ═══════════════════════════════════════════════════════
+const ORIGINAL={
+  trigo:{
+    nombre:"Trigo",emoji:"🌾",
+    precio:215,rendimiento:7,tc:1400,alquiler:264,
+    comision_pct:1.5,paritarias_usd_tn:2.7,
+    flete_corto:12103.99,granizo_pesos:0,
+    flete_largo:29837.56,
+    insumos:[
+      {e:"Barbecho",n:"Supernova",p:14,d:0.05},{e:"Barbecho",n:"Control Max",p:7.05,d:1.5},
+      {e:"Barbecho",n:"Latium",p:12,d:0.7},{e:"Barbecho",n:"2,4-D",p:6,d:1},
+      {e:"Barbecho",n:"Dicamba",p:8,d:0.2},{e:"Barbecho",n:"Finesse",p:280,d:0.015},
+      {e:"Barbecho",n:"Optimizer",p:3.95,d:0.3},
+      {e:"Siembra",n:"Acceleron",p:277.87,d:0.42},{e:"Siembra",n:"Mezcla 7-40",p:800,d:0.1},
+      {e:"Siembra",n:"Urea",p:940,d:0.25},{e:"Siembra",n:"Semilla",p:210,d:0.14},
+      {e:"POE",n:"Hussar Plus",p:0,d:0},{e:"POE",n:"Optimizer",p:0,d:0},
+      {e:"POE",n:"Cripton",p:30.78,d:0.7},{e:"POE",n:"Optimizer",p:3.95,d:0.3},
+      {e:"POE",n:"Cripton Xpro",p:48.7,d:0.7},{e:"POE",n:"Optimizer",p:3.95,d:0.3},
+    ],
+    labores:[{n:"Siembra",c:1,t:60},{n:"Cosecha",c:1,t:100},{n:"Pulverización",c:3,t:7}]
+  },
+  soja2:{
+    nombre:"Soja 2ª",emoji:"🌱",
+    precio:330,rendimiento:2.5,tc:1400,alquiler:264,
+    comision_pct:1.5,paritarias_usd_tn:2.7,
+    flete_corto:12103.99,granizo_pesos:0,
+    flete_largo:29837.56,
+    insumos:[
+      {e:"Barbecho",n:"Supernova",p:14,d:0.05},{e:"Barbecho",n:"Control Max",p:7.05,d:1.5},
+      {e:"Barbecho",n:"Latium",p:12,d:0.8},{e:"Barbecho",n:"2,4-D",p:6,d:1},
+      {e:"Barbecho",n:"Sulfentrazone",p:20,d:0.5},{e:"Barbecho",n:"S-Metolaclor",p:6,d:1.2},
+      {e:"Barbecho",n:"Optimizer",p:3.95,d:0.3},
+      {e:"Siembra",n:"Nitragin Opt. II",p:182.97,d:0.035},{e:"Siembra",n:"Mezcla 7-40",p:800,d:0.1},
+      {e:"Siembra",n:"Semilla",p:293.02,d:0.07},
+      {e:"POE",n:"Latium",p:12,d:0.8},{e:"POE",n:"Control Max",p:7.05,d:1.5},
+      {e:"POE",n:"Belt",p:68.4,d:0.06},{e:"POE",n:"Optimizer",p:3.95,d:0.3},
+      {e:"POE",n:"Cripton",p:30.78,d:0.4},{e:"POE",n:"Solomon",p:23.96,d:0.25},
+      {e:"POE",n:"Optimizer",p:3.95,d:0.3},
+    ],
+    labores:[{n:"Siembra",c:1,t:60},{n:"Cosecha",c:1,t:100},{n:"Pulverización",c:3,t:7}]
+  },
+  soja1:{
+    nombre:"Soja 1ª",emoji:"🌿",
+    precio:330,rendimiento:4,tc:1400,alquiler:528,
+    comision_pct:1.5,paritarias_usd_tn:2.7,
+    flete_corto:12103.99,granizo_pesos:0,
+    flete_largo:29837.56,
+    insumos:[
+      {e:"Barbecho largo",n:"Supernova",p:14,d:0.05},{e:"Barbecho largo",n:"Control Max",p:7.05,d:1.5},
+      {e:"Barbecho largo",n:"2,4-D",p:6,d:0.8},{e:"Barbecho largo",n:"Dicamba",p:8,d:0.15},
+      {e:"Barbecho largo",n:"Latium",p:12,d:0.6},{e:"Barbecho largo",n:"Percutor",p:243.7,d:0.045},
+      {e:"Barbecho largo",n:"Optimizer",p:3.95,d:0.3},
+      {e:"Barbecho int/corto",n:"Supernova",p:14,d:0.05},{e:"Barbecho int/corto",n:"Control Max",p:7.05,d:1.5},
+      {e:"Barbecho int/corto",n:"Latium",p:12,d:0.8},{e:"Barbecho int/corto",n:"2,4-D",p:6,d:1},
+      {e:"Barbecho int/corto",n:"Dicamba",p:8,d:0.2},{e:"Barbecho int/corto",n:"Brodal",p:30,d:0.3},
+      {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},{e:"Barbecho int/corto",n:"Paraquat",p:3.5,d:2},
+      {e:"Barbecho int/corto",n:"Sulfentrazone",p:20,d:0.5},{e:"Barbecho int/corto",n:"S-Metolaclor",p:6,d:1.2},
+      {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},
+      {e:"Siembra",n:"Acceleron Soja Basic",p:182.97,d:0.035},{e:"Siembra",n:"Mezcla 7-40",p:800,d:0.08},
+      {e:"Siembra",n:"Semilla",p:293,d:0.07},
+      {e:"POE",n:"Latium",p:12,d:0.8},{e:"POE",n:"Control Max",p:7.05,d:1.5},
+      {e:"POE",n:"Belt",p:68.4,d:0.06},{e:"POE",n:"Optimizer",p:3.95,d:0.3},
+      {e:"POE",n:"Cripton",p:30.78,d:0.4},{e:"POE",n:"Solomon",p:23.96,d:0.25},
+      {e:"POE",n:"Optimizer",p:3.95,d:0.3},
+    ],
+    labores:[{n:"Siembra",c:1,t:60},{n:"Cosecha",c:1,t:100},{n:"Pulverización",c:5,t:7}]
+  },
+  maiz:{
+    nombre:"Maíz",emoji:"🌽",
+    precio:190,rendimiento:8.9,tc:1400,alquiler:528,
+    comision_pct:1.5,paritarias_usd_tn:2.7,
+    flete_corto:12103.99,granizo_pesos:0,
+    flete_largo:29837.56,
+    insumos:[
+      {e:"Barbecho largo",n:"Supernova",p:14,d:0.05},{e:"Barbecho largo",n:"Control Max",p:7.05,d:1.5},
+      {e:"Barbecho largo",n:"2,4-D",p:6,d:0.8},{e:"Barbecho largo",n:"Dicamba",p:8,d:0.15},
+      {e:"Barbecho largo",n:"Latium",p:12,d:0.6},{e:"Barbecho largo",n:"Percutor",p:243.7,d:0.045},
+      {e:"Barbecho largo",n:"Optimizer",p:3.95,d:0.3},
+      {e:"Barbecho int/corto",n:"Supernova",p:14,d:0.05},{e:"Barbecho int/corto",n:"Control Max",p:7.05,d:1.5},
+      {e:"Barbecho int/corto",n:"2,4-D",p:6,d:0.8},{e:"Barbecho int/corto",n:"Dicamba",p:8,d:0.2},
+      {e:"Barbecho int/corto",n:"Latium",p:12,d:0.8},{e:"Barbecho int/corto",n:"Flumioxazin",p:20,d:0.15},
+      {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},{e:"Barbecho int/corto",n:"Paraquat",p:3.5,d:2},
+      {e:"Barbecho int/corto",n:"Adengo",p:93,d:0.4},{e:"Barbecho int/corto",n:"S-Metolaclor",p:6,d:1.2},
+      {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},
+      {e:"Siembra",n:"Urea",p:960,d:0.3},{e:"Siembra",n:"MAP",p:1050,d:0.1},
+      {e:"Siembra",n:"Semilla",p:220,d:1},
+      {e:"POE",n:"Laudis",p:126,d:0},{e:"POE",n:"Control Max",p:5.8,d:0},
+      {e:"POE",n:"Atrazina",p:9.6,d:0},{e:"POE",n:"Optimizer",p:4,d:0},
+      {e:"POE",n:"Cripton",p:27,d:0},{e:"POE",n:"Optimizer",p:4,d:0},
+    ],
+    labores:[{n:"Siembra",c:1,t:60},{n:"Cosecha",c:1,t:100},{n:"Pulverización",c:5,t:7}]
+  },
+  arveja:{
+    nombre:"Arveja",emoji:"🟢",
+    precio:0,rendimiento:0,tc:1400,alquiler:0,
+    comision_pct:1.5,paritarias_usd_tn:2.7,
+    flete_corto:12103.99,granizo_pesos:0,
+    flete_largo:29837.56,
+    insumos:[
+      {e:"Barbecho",n:"Herbicida 1",p:0,d:0},{e:"Barbecho",n:"Optimizer",p:0,d:0},
+      {e:"Siembra",n:"Semilla",p:0,d:0},{e:"Siembra",n:"Inoculante",p:0,d:0},
+      {e:"POE",n:"Fungicida",p:0,d:0},
+    ],
+    labores:[{n:"Siembra",c:1,t:0},{n:"Cosecha",c:1,t:0},{n:"Pulverización",c:1,t:0}]
+  },
+  maiz2:{
+    nombre:"Maíz 2ª",emoji:"🌽",
+    precio:190,rendimiento:0,tc:1400,alquiler:0,
+    comision_pct:1.5,paritarias_usd_tn:2.7,
+    flete_corto:12103.99,granizo_pesos:0,
+    flete_largo:29837.56,
+    insumos:[
+      {e:"Barbecho largo",n:"Supernova",p:14,d:0.05},{e:"Barbecho largo",n:"Control Max",p:7.05,d:1.5},
+      {e:"Barbecho largo",n:"2,4-D",p:6,d:0.8},{e:"Barbecho largo",n:"Dicamba",p:8,d:0.15},
+      {e:"Barbecho largo",n:"Latium",p:12,d:0.6},{e:"Barbecho largo",n:"Percutor",p:243.7,d:0.045},
+      {e:"Barbecho largo",n:"Optimizer",p:3.95,d:0.3},
+      {e:"Barbecho int/corto",n:"Supernova",p:14,d:0.05},{e:"Barbecho int/corto",n:"Control Max",p:7.05,d:1.5},
+      {e:"Barbecho int/corto",n:"2,4-D",p:6,d:0.8},{e:"Barbecho int/corto",n:"Dicamba",p:8,d:0.2},
+      {e:"Barbecho int/corto",n:"Latium",p:12,d:0.8},{e:"Barbecho int/corto",n:"Flumioxazin",p:20,d:0.15},
+      {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},{e:"Barbecho int/corto",n:"Paraquat",p:3.5,d:2},
+      {e:"Barbecho int/corto",n:"Adengo",p:93,d:0.4},{e:"Barbecho int/corto",n:"S-Metolaclor",p:6,d:1.2},
+      {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},
+      {e:"Siembra",n:"Urea",p:960,d:0.3},{e:"Siembra",n:"MAP",p:1050,d:0.1},
+      {e:"Siembra",n:"Semilla",p:220,d:1},
+      {e:"POE",n:"Laudis",p:126,d:0},{e:"POE",n:"Control Max",p:5.8,d:0},
+      {e:"POE",n:"Atrazina",p:9.6,d:0},{e:"POE",n:"Optimizer",p:4,d:0},
+      {e:"POE",n:"Cripton",p:27,d:0},{e:"POE",n:"Optimizer",p:4,d:0},
+    ],
+    labores:[{n:"Siembra",c:1,t:60},{n:"Cosecha",c:1,t:100},{n:"Pulverización",c:5,t:7}]
+  }
+};
+
+// ═══ STATE ═══
+let DATA=JSON.parse(JSON.stringify(ORIGINAL));
+let activeKey='ts';
+const TABS=[
+  {k:'ts',    lbl:'🌾🌱 Trigo + Soja 2ª'},
+  {k:'am2',   lbl:'🟢🌽 Arveja + Maíz 2ª'},
+  {k:'soja1', lbl:'🌿 Soja 1ª'},
+  {k:'maiz',  lbl:'🌽 Maíz'},
+  {k:'resumen',lbl:'📊 Resumen'},
+];
+// Mapa tab → crops individuales para reset
+const TAB_KEYS={ts:['trigo','soja2'],am2:['arveja','maiz2'],soja1:['soja1'],maiz:['maiz'],resumen:[]};
+
+function saveData(){
+  try{localStorage.setItem('mb_v5',JSON.stringify(DATA));toast('✓ Datos guardados')}
+  catch(e){toast('Error al guardar')}
+}
+function loadData(){
+  try{const s=localStorage.getItem('mb_v5');if(s){const p=JSON.parse(s);Object.keys(p).forEach(k=>{if(DATA[k])DATA[k]=p[k]})}}catch(e){}
+}
+function resetCrop(){
+  const ks=TAB_KEYS[activeKey];if(!ks||!ks.length)return;
+  const nm=ks.map(k=>DATA[k].nombre).join(' y ');
+  if(!confirm('¿Restablecer '+nm+' a los valores originales?'))return;
+  ks.forEach(k=>{DATA[k]=JSON.parse(JSON.stringify(ORIGINAL[k]))});
+  renderContent();toast('↺ Valores restablecidos');
+}
+function toast(msg){
+  let t=document.querySelector('.toast');if(t)t.remove();
+  t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.classList.add('hide');setTimeout(()=>t.remove(),300)},2000);
+}
+
+// ═══ CÁLCULO ═══
+function calc(k){
+  const c=DATA[k];
+  const IB=c.precio*c.rendimiento;
+  const ins=c.insumos.reduce((s,i)=>s+i.p*i.d,0);
+  const lab=c.labores.reduce((s,l)=>s+l.c*l.t,0);
+  const com=IB*(c.comision_pct/100);
+  const par=c.paritarias_usd_tn*c.rendimiento;
+  const flc=c.tc>0?(c.flete_corto/c.tc)*c.rendimiento:0;
+  const fll=c.tc>0?(c.flete_largo/c.tc)*c.rendimiento:0;
+  const granizo=c.tc>0?(c.granizo_pesos||0)/c.tc:0;
+  const cmr=com+par+flc+fll;
+  const sa=ins+lab+cmr+granizo,ca=sa+c.alquiler;
+  return{IB,ins,lab,cmr,com,par,flc,fll,granizo,sa,ca,
+    mbA:IB-ca,mbP:IB-sa,
+    riA:c.precio>0?ca/c.precio:0,
+    riP:c.precio>0?sa/c.precio:0};
+}
+
+// ═══ FORMAT ═══
+const f2=n=>n.toFixed(2),f1=n=>n.toFixed(1);
+const usd=n=>'U$S '+Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const sgn=n=>n>=0?'+':'−';
+const esc=s=>String(s).replace(/"/g,'&quot;');
+
+// ═══ TABS ═══
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=TABS.map(t=>
+    `<div class="tab ${t.k===activeKey?'active':''}" onclick="sw('${t.k}')">${t.lbl}</div>`
+  ).join('');
+}
+function sw(k){activeKey=k;renderTabs();renderContent()}
+
+// ═══ INSUMOS ═══
+function htmlIns(k){
+  const rows=DATA[k].insumos,etapas=[...new Set(rows.map(r=>r.e))];
+  let h=`<div class="tbl-head ins"><span>Producto</span><span style="text-align:right">Precio U$S</span><span style="text-align:right">Dosis</span><span style="text-align:right">Total</span><span></span></div>`;
+  etapas.forEach(e=>{
+    h+=`<div class="etapa-group"><div class="etapa-label">${e}</div>`;
+    rows.forEach((r,i)=>{if(r.e!==e)return;
+      h+=`<div class="ins-row">
+        <input type="text" value="${esc(r.n)}" onchange="ui('${k}',${i},'n',this.value)">
+        <input type="number" value="${r.p}" step="0.01" min="0" style="text-align:right" oninput="ui('${k}',${i},'p',+this.value||0)">
+        <input type="number" value="${r.d}" step="0.001" min="0" style="text-align:right" oninput="ui('${k}',${i},'d',+this.value||0)">
+        <div class="tcell" id="it-${k}-${i}">${f2(r.p*r.d)}</div>
+        <button class="btn-del" onclick="di('${k}',${i})">×</button>
+      </div>`;
+    });
+    h+=`<button class="btn-add" onclick="ai('${k}','${e.replace(/'/g,"\\'")}')">+ Agregar</button></div>`;
+  });
+  h+=`<button class="btn-add ne" onclick="ne('${k}')">+ Nueva etapa</button>`;
+  return h;
+}
+
+// ═══ LABORES ═══
+function htmlLab(k){
+  let h=`<div class="tbl-head lab"><span>Labor</span><span style="text-align:right">Cant.</span><span style="text-align:right">U$S/Ha</span><span style="text-align:right">Total</span><span></span></div>`;
+  DATA[k].labores.forEach((l,i)=>{
+    h+=`<div class="lab-row">
+      <input type="text" value="${esc(l.n)}" onchange="ul('${k}',${i},'n',this.value)">
+      <input type="number" value="${l.c}" min="0" step="1" style="text-align:right" oninput="ul('${k}',${i},'c',+this.value||0)">
+      <input type="number" value="${l.t}" min="0" step="0.5" style="text-align:right" oninput="ul('${k}',${i},'t',+this.value||0)">
+      <div class="tcell" id="lt-${k}-${i}">${f2(l.c*l.t)}</div>
+      <button class="btn-del" onclick="dl('${k}',${i})">×</button>
+    </div>`;
+  });
+  h+=`<button class="btn-add" onclick="al('${k}')">+ Agregar labor</button>`;
+  return h;
+}
+
+// ═══ PARAMS ═══
+function htmlParams(k){
+  const c=DATA[k],r=calc(k);
+  return`<div class="card">
+    <div class="card-header">Parámetros de producción</div>
+    <div class="card-body">
+      <div class="pgrid">
+        <div class="pf"><label>Precio grano (U$S/tn)</label><input type="number" value="${c.precio}" step="0.5" min="0" oninput="up('${k}','precio',+this.value||0)"></div>
+        <div class="pf"><label>Rendimiento esp. (tn/Ha)</label><input type="number" value="${c.rendimiento}" step="0.1" min="0" oninput="up('${k}','rendimiento',+this.value||0)"></div>
+        <div class="pf"><label>Tipo de Cambio ($/U$S)</label><input type="number" value="${c.tc}" step="10" min="1" oninput="up('${k}','tc',+this.value||1)"></div>
+        <div class="pf"><label>Alquiler (U$S/Ha)</label><input type="number" value="${c.alquiler}" step="1" min="0" oninput="up('${k}','alquiler',+this.value||0)"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">Comercialización</div>
+    <div class="card-body">
+      <div class="pgrid3" style="margin-bottom:10px">
+        <div class="pf"><label>Comisión (%)</label><input type="number" value="${c.comision_pct}" step="0.1" min="0" oninput="up('${k}','comision_pct',+this.value||0)"></div>
+        <div class="pf"><label>Paritarias (U$S/tn)</label><input type="number" value="${c.paritarias_usd_tn}" step="0.1" min="0" oninput="up('${k}','paritarias_usd_tn',+this.value||0)"></div>
+      </div>
+      <div class="flete-block">
+        <div class="flete-title" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Tarifa de flete ($/tn) — consultá la tabla CATAC</span>
+          <a href="https://api.apicatac.com/wp-content/uploads/2026/04/TARIFA-REFERENCIA-10-ABRIL-2026.pdf"
+             target="_blank"
+             style="font-size:10px;color:var(--accent);text-decoration:none;font-weight:600;border:1px solid var(--accent);border-radius:3px;padding:2px 7px;white-space:nowrap">
+            📄 Ver tabla
+          </a>
+        </div>
+        <div class="flete-row">
+          <span class="fl-name">Flete corto</span>
+          <input type="number" value="${c.flete_corto}" min="0" step="10" oninput="up('${k}','flete_corto',+this.value||0)" placeholder="$/tn">
+          <span class="fl-result" id="fl-corto-${k}">= U$S ${f2(r.flc)}/Ha</span>
+        </div>
+        <div class="flete-row">
+          <span class="fl-name">Flete largo</span>
+          <input type="number" value="${c.flete_largo}" min="0" step="10" oninput="up('${k}','flete_largo',+this.value||0)" placeholder="$/tn">
+          <span class="fl-result" id="fl-largo-${k}">= U$S ${f2(r.fll)}/Ha</span>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="pf"><label>🌧 Seguro granizo ($/Ha) &nbsp;<span style="font-weight:400;text-transform:none;font-size:10px">÷ TC → U$S/Ha</span></label>
+          <input type="number" value="${c.granizo_pesos||0}" min="0" step="100" oninput="up('${k}','granizo_pesos',+this.value||0)"
+            style="width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:13.5px;font-weight:500;color:var(--text);background:var(--surface2)">
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RESULTS — RI como protagonista
+// ═══════════════════════════════════════════════════════
+function htmlRes(k){
+  const r=calc(k),c=DATA[k];
+  const aOk=r.mbA>=0,pOk=r.mbP>=0;
+  const mg=c.rendimiento-r.riA; // margen sobre RI arrendado
+  const riColor=mg>=0?'#68e085':'#ff7c6c';
+
+  return`
+  <div class="r-title">${c.emoji} ${c.nombre}</div>
+
+  <!-- RI HERO -->
+  <div class="ri-hero">
+    <div class="ri-hero-t">Rendimiento de indiferencia</div>
+    <div class="ri-grid">
+      <div class="ri-block">
+        <span class="rl">Arrendado</span>
+        <span class="rn">${f1(r.riA)}</span>
+        <span class="ru">tn / Ha</span>
+      </div>
+      <div class="ri-block">
+        <span class="rl">Propio</span>
+        <span class="rn">${f1(r.riP)}</span>
+        <span class="ru">tn / Ha</span>
+      </div>
+    </div>
+    <div class="ri-footer">
+      <div class="ri-footer-item">
+        <span class="rfl">Esperado</span>
+        <span class="rfv" style="color:rgba(255,255,255,.85)">${f1(c.rendimiento)} tn</span>
+      </div>
+      <div class="ri-footer-item">
+        <span class="rfl">Margen arr.</span>
+        <span class="rfv" style="color:${riColor}">${sgn(mg)} ${Math.abs(mg).toFixed(1)} tn</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- IB compacto -->
+  <div class="r-ib">
+    <div><div class="il">Ingreso Bruto</div><div class="is">${f1(c.rendimiento)} tn × U$S ${f2(c.precio)} &nbsp;|&nbsp; TC ${c.tc.toLocaleString('es-AR')}</div></div>
+    <div class="iv">${usd(r.IB)}</div>
+  </div>
+
+  <!-- MB -->
+  <div class="mb-cards">
+    <div class="mbc ${aOk?'pos-c':'neg-c'}"><span class="ml">MB Arrendado</span><span class="mv ${aOk?'pos':'neg'}">${sgn(r.mbA)} ${usd(r.mbA)}</span></div>
+    <div class="mbc ${pOk?'pos-c':'neg-c'}"><span class="ml">MB Propio</span><span class="mv ${pOk?'pos':'neg'}">${sgn(r.mbP)} ${usd(r.mbP)}</span></div>
+  </div>
+
+  <!-- Breakdown -->
+  <div class="bd">
+    <div class="bdt">Estructura de costos (U$S/Ha)</div>
+    <div class="bdr"><span class="bl">Insumos</span><span class="bv">${f2(r.ins)}</span></div>
+    <div class="bdr"><span class="bl">Labores</span><span class="bv">${f2(r.lab)}</span></div>
+    <div class="bdr"><span class="bl">Comercialización</span><span class="bv">${f2(r.cmr)}</span></div>
+    <div class="bdr sub"><span class="bl">· Comisión ${f1(c.comision_pct)}%</span><span class="bv">${f2(r.com)}</span></div>
+    <div class="bdr sub"><span class="bl">· Paritarias</span><span class="bv">${f2(r.par)}</span></div>
+    <div class="bdr sub"><span class="bl">· Flete corto</span><span class="bv">${f2(r.flc)}</span></div>
+    <div class="bdr sub"><span class="bl">· Flete largo</span><span class="bv">${f2(r.fll)}</span></div>
+    <div class="bdr"><span class="bl">Seguro granizo</span><span class="bv">${f2(r.granizo)}</span></div>
+    <div class="bdr"><span class="bl">Alquiler</span><span class="bv">${f2(c.alquiler)}</span></div>
+    <div class="bdr tot"><span class="bl">Costo total arr.</span><span class="bv">${f2(r.ca)}</span></div>
+  </div>`;
+}
+
+// ═══ MINI RESULTS (para vistas combinadas) ═══
+function htmlMini(k){
+  const r=calc(k),c=DATA[k];
+  const aOk=r.mbA>=0,pOk=r.mbP>=0;
+  const mg=c.rendimiento-r.riA;
+  const riColor=mg>=0?'#68e085':'#ff7c6c';
+  return`
+  <div class="r-sub">${c.emoji} ${c.nombre}</div>
+  <!-- RI mini -->
+  <div class="ri-hero" style="margin-bottom:10px">
+    <div class="ri-hero-t">Rendimiento de indiferencia</div>
+    <div class="ri-grid" style="margin-bottom:10px">
+      <div class="ri-block"><span class="rl">Arrendado</span><span class="rn" style="font-size:26px">${f1(r.riA)}</span><span class="ru">tn/Ha</span></div>
+      <div class="ri-block"><span class="rl">Propio</span><span class="rn" style="font-size:26px">${f1(r.riP)}</span><span class="ru">tn/Ha</span></div>
+    </div>
+    <div class="ri-footer">
+      <div class="ri-footer-item"><span class="rfl">Esperado</span><span class="rfv" style="color:rgba(255,255,255,.85);font-size:13px">${f1(c.rendimiento)} tn</span></div>
+      <div class="ri-footer-item"><span class="rfl">Margen arr.</span><span class="rfv" style="color:${riColor};font-size:13px">${sgn(mg)} ${Math.abs(mg).toFixed(1)} tn</span></div>
+    </div>
+  </div>
+  <div class="r-ib" style="margin-bottom:9px">
+    <div><div class="il">Ingreso Bruto</div><div class="is">${f1(c.rendimiento)} tn × U$S ${f2(c.precio)}</div></div>
+    <div class="iv" style="font-size:18px">${usd(r.IB)}</div>
+  </div>
+  <div class="mb-cards" style="gap:6px;margin-bottom:9px">
+    <div class="mbc ${aOk?'pos-c':'neg-c'}"><span class="ml">MB Arr.</span><span class="mv ${aOk?'pos':'neg'}" style="font-size:15px">${sgn(r.mbA)} ${usd(r.mbA)}</span></div>
+    <div class="mbc ${pOk?'pos-c':'neg-c'}"><span class="ml">MB Prop.</span><span class="mv ${pOk?'pos':'neg'}" style="font-size:15px">${sgn(r.mbP)} ${usd(r.mbP)}</span></div>
+  </div>
+  <div class="bd" style="margin-bottom:6px">
+    <div class="bdr"><span class="bl">Insumos</span><span class="bv">${f2(r.ins)}</span></div>
+    <div class="bdr"><span class="bl">Labores</span><span class="bv">${f2(r.lab)}</span></div>
+    <div class="bdr"><span class="bl">Comercialización</span><span class="bv">${f2(r.cmr)}</span></div>
+    <div class="bdr"><span class="bl">Granizo</span><span class="bv">${f2(r.granizo)}</span></div>
+    <div class="bdr"><span class="bl">Alquiler</span><span class="bv">${f2(c.alquiler)}</span></div>
+    <div class="bdr tot"><span class="bl">Costo total arr.</span><span class="bv">${f2(r.ca)}</span></div>
+  </div>`;
+}
+
+// ═══ COMBINED TOTAL BOX ═══
+function htmlCombTotal(k1,k2,label){
+  const r1=calc(k1),r2=calc(k2);
+  const cA=r1.mbA+r2.mbA,cP=r1.mbP+r2.mbP;
+  return`<div class="comb-box">
+    <div class="ct">${label}</div>
+    <div class="comb-row"><label>MB Arrendado total</label><span class="comb-v ${cA>=0?'pos':'neg'}">${sgn(cA)} ${usd(cA)}</span></div>
+    <div class="comb-row"><label>MB Propio total</label><span class="comb-v ${cP>=0?'pos':'neg'}">${sgn(cP)} ${usd(cP)}</span></div>
+  </div>`;
+}
+
+// ═══ RESUMEN ═══
+function htmlResumen(){
+  const ks=['trigo','soja2','soja1','maiz','arveja','maiz2'];
+  const rows=ks.map(k=>{const c=DATA[k],r=calc(k);
+    return`<tr><td>${c.emoji} ${c.nombre}</td><td>${f2(c.precio)}</td><td>${f1(c.rendimiento)}</td><td>${f2(r.IB)}</td><td>${f2(r.ins)}</td><td>${f2(r.lab)}</td><td>${f2(r.cmr)}</td><td>${f2(c.alquiler)}</td><td>${f2(r.ca)}</td><td class="${r.mbA>=0?'pv':'nv'}">${f2(r.mbA)}</td><td class="${r.mbP>=0?'pv':'nv'}">${f2(r.mbP)}</td><td>${f1(r.riA)}</td><td>${f1(r.riP)}</td></tr>`;
+  }).join('');
+  function combRow(k1,k2,lbl){
+    const r1=calc(k1),r2=calc(k2),c1=DATA[k1],c2=DATA[k2];
+    const cA=r1.mbA+r2.mbA,cP=r1.mbP+r2.mbP;
+    return`<tr class="crow"><td>${c1.emoji}${c2.emoji} ${lbl}</td><td>—</td><td>—</td><td>${f2(r1.IB+r2.IB)}</td><td>${f2(r1.ins+r2.ins)}</td><td>${f2(r1.lab+r2.lab)}</td><td>${f2(r1.cmr+r2.cmr)}</td><td>${f2(c1.alquiler+c2.alquiler)}</td><td>${f2(r1.ca+r2.ca)}</td><td class="${cA>=0?'pv':'nv'}">${f2(cA)}</td><td class="${cP>=0?'pv':'nv'}">${f2(cP)}</td><td>—</td><td>—</td></tr>`;
+  }
+  return`<div class="res-panel"><h2>📊 Resumen comparativo — Campaña 26/27</h2>
+  <div style="overflow-x:auto"><table class="res-tbl"><thead><tr>
+    <th>Cultivo</th><th>Precio U$S/tn</th><th>Rend. tn/Ha</th><th>IB U$S/Ha</th>
+    <th>Insumos</th><th>Labores</th><th>Comerc.</th><th>Alquiler</th><th>Costo arr.</th>
+    <th>MB Arrendado</th><th>MB Propio</th><th>R.I. arr.</th><th>R.I. prop.</th>
+  </tr></thead><tbody>
+    ${rows}
+    ${combRow('trigo','soja2','Trigo + Soja 2ª')}
+    ${combRow('arveja','maiz2','Arveja + Maíz 2ª')}
+  </tbody></table></div>
+  <p style="margin-top:14px;font-size:11px;color:var(--text-muted)">Valores en U$S/Ha · R.I. = Rendimiento de indiferencia · Filas sombreadas = suma de la rotación anual</p>
+  </div>`;
+}
+
+// ═══ RENDER CONTENT ═══
+function renderContent(){
+  const el=document.getElementById('content');
+  if(activeKey==='resumen'){el.innerHTML=htmlResumen();return}
+
+  // Vistas combinadas
+  if(activeKey==='ts'||activeKey==='am2'){
+    const k1=activeKey==='ts'?'trigo':'arveja';
+    const k2=activeKey==='ts'?'soja2':'maiz2';
+    const r1=calc(k1),r2=calc(k2);
+    const label=activeKey==='ts'?'🌾 Trigo':'🟢 Arveja';
+    const label2=activeKey==='ts'?'🌱 Soja 2ª':'🌽 Maíz 2ª';
+    const rotLabel=activeKey==='ts'?'Total rotación Trigo / Soja 2ª (U$S/Ha)':'Total rotación Arveja / Maíz 2ª (U$S/Ha)';
+    el.innerHTML=`<div class="ts-layout">
+      <div class="left-panel narrow">
+        <div class="crop-div">${label}</div>
+        ${htmlParams(k1)}
+        <div class="card"><div class="card-header"><span>Insumos</span><span class="card-total" id="it-tot-${k1}">U$S ${f2(r1.ins)}</span></div><div class="card-body tight" id="ib-${k1}">${htmlIns(k1)}</div></div>
+        <div class="card"><div class="card-header"><span>Labores</span><span class="card-total" id="lt-tot-${k1}">U$S ${f2(r1.lab)}</span></div><div class="card-body tight" id="lb-${k1}">${htmlLab(k1)}</div></div>
+      </div>
+      <div class="left-panel narrow" style="border-left:1px solid var(--border)">
+        <div class="crop-div">${label2}</div>
+        ${htmlParams(k2)}
+        <div class="card"><div class="card-header"><span>Insumos</span><span class="card-total" id="it-tot-${k2}">U$S ${f2(r2.ins)}</span></div><div class="card-body tight" id="ib-${k2}">${htmlIns(k2)}</div></div>
+        <div class="card"><div class="card-header"><span>Labores</span><span class="card-total" id="lt-tot-${k2}">U$S ${f2(r2.lab)}</span></div><div class="card-body tight" id="lb-${k2}">${htmlLab(k2)}</div></div>
+      </div>
+      <div class="right-panel" id="rp-${activeKey}">
+        <div class="r-title" style="margin-bottom:14px">${activeKey==='ts'?'🌾🌱':'🟢🌽'} Rotación del año</div>
+        ${htmlMini(k1)}
+        <hr class="res-sep">
+        ${htmlMini(k2)}
+        ${htmlCombTotal(k1,k2,rotLabel)}
+      </div>
+    </div>`;
+    return;
+  }
+
+  // Vista individual
+  const k=activeKey,r=calc(k);
+  el.innerHTML=`<div class="crop-layout">
+    <div class="left-panel">
+      ${htmlParams(k)}
+      <div class="card"><div class="card-header"><span>Insumos</span><span class="card-total" id="it-tot-${k}">U$S ${f2(r.ins)}</span></div><div class="card-body" id="ib-${k}">${htmlIns(k)}</div></div>
+      <div class="card"><div class="card-header"><span>Labores</span><span class="card-total" id="lt-tot-${k}">U$S ${f2(r.lab)}</span></div><div class="card-body" id="lb-${k}">${htmlLab(k)}</div></div>
+    </div>
+    <div class="right-panel" id="rp-${k}">${htmlRes(k)}</div>
+  </div>`;
+}
+
+// ═══ UPDATE ═══
+function up(k,f,v){DATA[k][f]=v;rr(k)}
+function ui(k,i,f,v){DATA[k].insumos[i][f]=v;const r=DATA[k].insumos[i];const e=document.getElementById('it-'+k+'-'+i);if(e)e.textContent=f2(r.p*r.d);rr(k)}
+function ul(k,i,f,v){DATA[k].labores[i][f]=v;const r=DATA[k].labores[i];const e=document.getElementById('lt-'+k+'-'+i);if(e)e.textContent=f2(r.c*r.t);rr(k)}
+function rr(k){
+  const r=calc(k);
+  // Actualizar panel derecho
+  if(activeKey==='ts'||activeKey==='am2'){
+    const el=document.getElementById('rp-'+activeKey);
+    if(!el)return;
+    const k1=activeKey==='ts'?'trigo':'arveja';
+    const k2=activeKey==='ts'?'soja2':'maiz2';
+    const rotLabel=activeKey==='ts'?'Total rotación Trigo / Soja 2ª (U$S/Ha)':'Total rotación Arveja / Maíz 2ª (U$S/Ha)';
+    el.innerHTML=`<div class="r-title" style="margin-bottom:14px">${activeKey==='ts'?'🌾🌱':'🟢🌽'} Rotación del año</div>
+      ${htmlMini(k1)}<hr class="res-sep">${htmlMini(k2)}${htmlCombTotal(k1,k2,rotLabel)}`;
+  } else {
+    const el=document.getElementById('rp-'+k);
+    if(el)el.innerHTML=htmlRes(k);
+  }
+  const ie=document.getElementById('it-tot-'+k);if(ie)ie.textContent='U$S '+f2(r.ins);
+  const le=document.getElementById('lt-tot-'+k);if(le)le.textContent='U$S '+f2(r.lab);
+  const fc=document.getElementById('fl-corto-'+k);if(fc)fc.textContent='= U$S '+f2(r.flc)+'/Ha';
+  const fl2=document.getElementById('fl-largo-'+k);if(fl2)fl2.textContent='= U$S '+f2(r.fll)+'/Ha';
+}
+function di(k,i){DATA[k].insumos.splice(i,1);document.getElementById('ib-'+k).innerHTML=htmlIns(k);rr(k)}
+function ai(k,e){DATA[k].insumos.push({e,n:'Nuevo producto',p:0,d:0});document.getElementById('ib-'+k).innerHTML=htmlIns(k);rr(k)}
+function ne(k){const n=prompt('Nombre de la nueva etapa:');if(!n||!n.trim())return;DATA[k].insumos.push({e:n.trim(),n:'Nuevo producto',p:0,d:0});document.getElementById('ib-'+k).innerHTML=htmlIns(k);rr(k)}
+function dl(k,i){DATA[k].labores.splice(i,1);document.getElementById('lb-'+k).innerHTML=htmlLab(k);rr(k)}
+function al(k){DATA[k].labores.push({n:'Nueva labor',c:1,t:0});document.getElementById('lb-'+k).innerHTML=htmlLab(k);rr(k)}
+
+// ═══ INIT ═══
+loadData();renderTabs();renderContent();
+</script>
+</body>
+</html>
