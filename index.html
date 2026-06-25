@@ -256,7 +256,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 const ORIGINAL={
   trigo:{
     nombre:"Trigo",emoji:"🌾",
-    precio:215,rendimiento:7,tc:1400,alquiler:264,
+    precio:200,rendimiento:7,tc:1470,alquiler:264,
     comision_pct:1.5,paritarias_usd_tn:2.7,
     flete_corto:12103.99,granizo_pesos:0,
     flete_largo:29837.56,
@@ -275,7 +275,7 @@ const ORIGINAL={
   },
   soja2:{
     nombre:"Soja 2ª",emoji:"🌱",
-    precio:330,rendimiento:2.5,tc:1400,alquiler:264,
+    precio:323,rendimiento:2.5,tc:1470,alquiler:264,
     comision_pct:1.5,paritarias_usd_tn:2.7,
     flete_corto:12103.99,granizo_pesos:0,
     flete_largo:29837.56,
@@ -295,7 +295,7 @@ const ORIGINAL={
   },
   soja1:{
     nombre:"Soja 1ª",emoji:"🌿",
-    precio:330,rendimiento:4,tc:1400,alquiler:528,
+    precio:323,rendimiento:4,tc:1470,alquiler:528,
     comision_pct:1.5,paritarias_usd_tn:2.7,
     flete_corto:12103.99,granizo_pesos:0,
     flete_largo:29837.56,
@@ -321,7 +321,7 @@ const ORIGINAL={
   },
   maiz:{
     nombre:"Maíz",emoji:"🌽",
-    precio:190,rendimiento:8.9,tc:1400,alquiler:528,
+    precio:180,rendimiento:8.9,tc:1470,alquiler:528,
     comision_pct:1.5,paritarias_usd_tn:2.7,
     flete_corto:12103.99,granizo_pesos:0,
     flete_largo:29837.56,
@@ -336,7 +336,7 @@ const ORIGINAL={
       {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},{e:"Barbecho int/corto",n:"Paraquat",p:3.5,d:2},
       {e:"Barbecho int/corto",n:"Adengo",p:93,d:0.4},{e:"Barbecho int/corto",n:"S-Metolaclor",p:6,d:1.2},
       {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},
-      {e:"Siembra",n:"Urea",p:960,d:0.3},{e:"Siembra",n:"MAP",p:1050,d:0.1},
+      {e:"Siembra",n:"Urea",p:960,d:0.3},{e:"Siembra",n:"MAP",p:870,d:0.1},
       {e:"Siembra",n:"Semilla",p:220,d:1},
       {e:"POE",n:"Laudis",p:126,d:0},{e:"POE",n:"Control Max",p:5.8,d:0},
       {e:"POE",n:"Atrazina",p:9.6,d:0},{e:"POE",n:"Optimizer",p:4,d:0},
@@ -346,7 +346,7 @@ const ORIGINAL={
   },
   arveja:{
     nombre:"Arveja",emoji:"🟢",
-    precio:0,rendimiento:0,tc:1400,alquiler:0,
+    precio:0,rendimiento:0,tc:1470,alquiler:0,
     comision_pct:1.5,paritarias_usd_tn:2.7,
     flete_corto:12103.99,granizo_pesos:0,
     flete_largo:29837.56,
@@ -359,7 +359,7 @@ const ORIGINAL={
   },
   maiz2:{
     nombre:"Maíz 2ª",emoji:"🌽",
-    precio:190,rendimiento:0,tc:1400,alquiler:0,
+    precio:180,rendimiento:0,tc:1470,alquiler:0,
     comision_pct:1.5,paritarias_usd_tn:2.7,
     flete_corto:12103.99,granizo_pesos:0,
     flete_largo:29837.56,
@@ -374,7 +374,7 @@ const ORIGINAL={
       {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},{e:"Barbecho int/corto",n:"Paraquat",p:3.5,d:2},
       {e:"Barbecho int/corto",n:"Adengo",p:93,d:0.4},{e:"Barbecho int/corto",n:"S-Metolaclor",p:6,d:1.2},
       {e:"Barbecho int/corto",n:"Optimizer",p:3.95,d:0.3},
-      {e:"Siembra",n:"Urea",p:960,d:0.3},{e:"Siembra",n:"MAP",p:1050,d:0.1},
+      {e:"Siembra",n:"Urea",p:960,d:0.3},{e:"Siembra",n:"MAP",p:870,d:0.1},
       {e:"Siembra",n:"Semilla",p:220,d:1},
       {e:"POE",n:"Laudis",p:126,d:0},{e:"POE",n:"Control Max",p:5.8,d:0},
       {e:"POE",n:"Atrazina",p:9.6,d:0},{e:"POE",n:"Optimizer",p:4,d:0},
@@ -387,8 +387,8 @@ const ORIGINAL={
 
 // ═══ CATÁLOGO CENTRAL ═══
 // Precios en U$S · TC global · Se aplican a TODOS los cultivos
-let CATALOG={"Supernova": 14, "Control Max": 7.05, "Latium": 12, "2,4-D": 6, "Dicamba": 8, "Finesse": 280, "Optimizer": 3.95, "Acceleron": 277.87, "Mezcla 7-40": 800, "Urea": 960, "Semilla": 210, "Hussar Plus": 0, "Cripton": 30.78, "Cripton Xpro": 48.7, "Nitragin Opt. II": 182.97, "Sulfentrazone": 20, "S-Metolaclor": 6, "Belt": 68.4, "Solomon": 23.96, "Acceleron Soja Basic": 182.97, "Percutor": 243.7, "Brodal": 30, "Paraquat": 3.5, "MAP": 1050, "Laudis": 126, "Atrazina": 9.6, "Adengo": 93, "Flumioxazin": 20, "Herbicida 1": 0, "Inoculante": 0, "Fungicida": 0, "A35tgold": 0, "Glifo": 0, "Cletodim": 0, "Trifluralina": 0, "Mezcla 3-30": 0};
-let TC_GLOBAL=1400;
+let CATALOG={"Supernova": 14, "Control Max": 7.05, "Latium": 12, "2,4-D": 6, "Dicamba": 8, "Finesse": 280, "Optimizer": 3.95, "Acceleron": 277.87, "Mezcla 7-40": 800, "Urea": 960, "Semilla": 210, "Hussar Plus": 0, "Cripton": 30.78, "Cripton Xpro": 48.7, "Nitragin Opt. II": 182.97, "Sulfentrazone": 20, "S-Metolaclor": 6, "Belt": 68.4, "Solomon": 23.96, "Acceleron Soja Basic": 182.97, "Percutor": 243.7, "Brodal": 30, "Paraquat": 3.5, "MAP": 870, "Laudis": 126, "Atrazina": 9.6, "Adengo": 93, "Flumioxazin": 20, "Herbicida 1": 0, "Inoculante": 0, "Fungicida": 0, "A35tgold": 0, "Glifo": 0, "Cletodim": 0, "Trifluralina": 0, "Mezcla 3-30": 0};
+let TC_GLOBAL=1470;
 
 // ═══ STATE ═══
 let DATA=JSON.parse(JSON.stringify(ORIGINAL));
